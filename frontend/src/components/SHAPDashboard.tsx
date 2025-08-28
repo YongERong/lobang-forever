@@ -1,10 +1,10 @@
-import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { Paper } from '@mui/material';
+import type { SHAPDashboardProps } from '../types';
 
-const SHAPDashboard = ({ data, dataKey }) => {
+const SHAPDashboard = ({ data, dataKey } : SHAPDashboardProps) => {
   return (
     <Paper elevation={2} sx={{ width: "80%", p: 3, borderRadius: "1.5rem" }}>
       <Stack width="100%">

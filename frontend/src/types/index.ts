@@ -1,3 +1,4 @@
+import type { DatasetElementType } from "@mui/x-charts/internals";
 import type { Dispatch, SetStateAction } from "react";
 
 export interface User {
@@ -25,4 +26,9 @@ export interface HomeProps {
 
 export interface TextSpinnerProps {
   text: string;
+}
+
+export interface SHAPDashboardProps {
+  data: DatasetElementType<string | number | Date | null | undefined>[];
+  dataKey: string;
 }
