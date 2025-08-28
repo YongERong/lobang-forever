@@ -16,6 +16,7 @@ import type { FormEvent } from 'react';
 import type { LoginProps } from '../types';
 import SingpassLogin from "../components/SingpassLogin";
 import TextSpinner from "../components/TextSpinner";
+import { credentials } from "../data/mockdata";
 
 const Login = ({ user, setUser }: LoginProps) => {
   const [email, setEmail] = useState("");
@@ -31,11 +32,6 @@ const Login = ({ user, setUser }: LoginProps) => {
       navigate("/home");
     }
   }, [user, navigate]);
-
-  // Mock User
-  const credentials = [
-    { NRIC: "lebron", password: "james" },
-  ];
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
