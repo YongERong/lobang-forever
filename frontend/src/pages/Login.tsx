@@ -1,11 +1,25 @@
-import { Container, Input, TextField } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  TextField,
+  Typography,
+  Alert,
+  Box,
+  Container
+} from "@mui/material";
 import { useState } from "react";
+import type { FormEvent } from "react";
 import { useNavigate } from "react-router";
+import TextSpinner from "../components/TextSpinner";
+import type { LoginProps } from "../types";
 
-const Login = ({ setUser }) => {
+const Login = ({ setUser }: LoginProps) => {
   const [nric, setNric] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Mock User
@@ -13,35 +27,104 @@ const Login = ({ setUser }) => {
     { NRIC: "lebron", password: "james", },
   ];
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
+    // Simulate API call for delay & checking
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const user = credentials.find(
+      cred => cred.NRIC === nric && cred.password === password
+    );
 
-    try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ nric, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data);
-        navigate("/home");
-      } else {
-        setError("Invalid credentials");
-      }
-    } catch (err) {
-      setError("An error occurred. Please try again.");
+    if (user) {
+      setUser(user);
+      navigate("/home");
+    } else {
+      setError("Invalid NRIC or password. Please try again.");
     }
+    setLoading(false);
   };
 
   return (
-    <Container style={{display: "flex", flexDirection: "column", gap: "0.5em"}}>
-      <TextField required label="NRIC" placeholder="eg. S1234567Z" />
-      <TextField label="Password" type="password" autoComplete="current-password" />
+    <Container
+      maxWidth="sm"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+      }}
+    >
+      <Card
+        sx={{
+          width: "100%",
+          maxWidth: 400,
+          borderRadius: 2,
+        }}
+      >
+        <form onSubmit={handleSubmit}>
+          <CardContent sx={{ p: 4 }}>
+            <Box sx={{ textAlign: "center", mb: 3 }}>
+              <Typography variant="h4" component="h1" gutterBottom>
+                Singpass Login
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Sign in to your account
+              </Typography>
+            </Box>
+
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            )}
+
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <TextField
+                required
+                fullWidth
+                label="NRIC"
+                placeholder="eg. S1234567Z"
+                value={nric}
+                onChange={(e) => setNric(e.target.value)}
+                variant="outlined"
+                autoComplete="username"
+              />
+
+              <TextField
+                required
+                fullWidth
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                variant="outlined"
+                autoComplete="current-password"
+              />
+            </Box>
+          </CardContent>
+
+          <CardActions sx={{ p: 3, pt: 0, justifyContent: "center", alignItems: "center" }}>
+            <Button
+              type="submit"
+              variant="contained"
+              // fullWidth
+              size="large"
+              disabled={loading || !nric || !password}
+              sx={{
+                py: 1.5,
+                textTransform: 'none',
+                fontSize: '1rem',
+                fontWeight: 600,
+                width: "80%",
+              }}
+            >
+              {loading ? <TextSpinner text={"Signing In..."} /> : "Sign In"}
+            </Button>
+          </CardActions>
+        </form>
+      </Card>
     </Container>
   );
 };

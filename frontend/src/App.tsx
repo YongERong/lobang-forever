@@ -2,9 +2,10 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import Home from './pages/Home.tsx';
 import Login from './pages/Login.tsx';
 import { useState } from 'react';
+import type { User } from './types/index.ts';
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   return (
     <BrowserRouter>
