@@ -14,8 +14,13 @@ export interface LoginProps {
   setUser: Dispatch<SetStateAction<User | null>>;
 }
 
+export interface LogoutProps {
+  setUser: Dispatch<SetStateAction<User | null>>;
+}
+
 export interface HomeProps {
   user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
 }
 
 export interface TextSpinnerProps {
