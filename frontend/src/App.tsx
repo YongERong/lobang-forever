@@ -10,7 +10,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<Login setUser={setUser}/>}/>
+        <Route index element={<Login user={user} setUser={setUser}/>}/>
         <Route path="/home" element={<Home user={user}/>}/>
       </Routes>
     </BrowserRouter>

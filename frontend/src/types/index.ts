@@ -5,7 +5,12 @@ export interface User {
   password: string;
 }
 
+export interface SingpassLoginProps {
+  setUser: Dispatch<SetStateAction<User | null>>;
+}
+
 export interface LoginProps {
+  user: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
 }
 
