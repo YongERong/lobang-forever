@@ -60,7 +60,7 @@ def main(config_path: str):
 
     args = TrainingArguments(
         output_dir=out_dir,
-        evaluation_strategy="epoch",
+        eval_strategy="epoch",
         save_strategy="epoch",
         learning_rate=cfg["training"]["learning_rate"],
         per_device_train_batch_size=cfg["training"]["batch_size"],
