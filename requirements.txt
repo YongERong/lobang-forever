@@ -1,0 +1,7 @@
+transformers>=4.42.0
+datasets>=2.19.0
+torch
+scikit-learn
+pandas
+numpy
+PyYAML

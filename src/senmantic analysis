@@ -1,0 +1,22 @@
+import pandas as pd
+import re
+
+# Load CSV
+df = pd.read_csv("C:\Users\shaun\OneDrive - National University of Singapore\Documents\TikTok TechJam 2025\data\comments data (databrick).csv")
+
+# Keep only the important column
+df = df[["comment_text", "like_count"]]  
+
+# Basic cleaning function
+def clean_text(text):
+    text = str(text).lower()                          # lowercase
+    text = re.sub(r"http\S+", "", text)              # remove links
+    text = re.sub(r"@\w+", "", text)                 # remove @mentions
+    text = re.sub(r"#[\w-]+", "", text)              # remove hashtags
+    text = re.sub(r"[^\w\s]", "", text)              # remove punctuation
+    text = re.sub(r"\d+", "", text)                  # remove numbers
+    return text.strip()
+
+df["clean_text"] = df["comment_text"].apply(clean_text)
+
+print(df.head())
