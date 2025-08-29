@@ -32,3 +32,19 @@ export interface SHAPDashboardProps {
   data: DatasetElementType<string | number | Date | null | undefined>[];
   dataKey: string;
 }
+
+// Type definitions
+export type ChangeType = 'positive' | 'negative' | 'neutral';
+
+export interface MetricProps {
+  title: string;
+  value: string;
+  change: string;
+  changeType: ChangeType;
+  icon: React.ComponentType<any>;
+  description: string;
+}
+
+export interface MetricCardProps {
+  data: MetricProps;
+}
