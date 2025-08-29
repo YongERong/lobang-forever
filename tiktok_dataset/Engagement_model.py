@@ -56,9 +56,9 @@ rmse_scores = cross_val_score(stacked_model, X, y, cv=kf, scoring=rmse_scorer)
 r2_scores = cross_val_score(stacked_model, X, y, cv=kf, scoring=r2_scorer)
 
 print("Cross-Validated RMSE:")
-print(f"  Mean: {abs(rmse_scores.mean()):.4f}, Std: {rmse_scores.std():.4f}")
+print(f" Mean: {abs(rmse_scores.mean()):.4f}, Std: {rmse_scores.std():.4f}")
 print("Cross-Validated R²:")
-print(f"  Mean: {r2_scores.mean():.4f}, Std: {r2_scores.std():.4f}")
+print(f" Mean: {r2_scores.mean():.4f}, Std: {r2_scores.std():.4f}")
 
 # ----- 5. Train/Test Split Evaluation -----
 X_train, X_test, y_train, y_test = train_test_split(
@@ -72,8 +72,8 @@ rmse = np.sqrt(mean_squared_error(y_test, y_pred))
 r2 = r2_score(y_test, y_pred)
 
 print("\n Train/Test Evaluation:")
-print(f"  RMSE: {rmse:.4f}")
-print(f"  R² Score: {r2:.4f}")
+print(f" RMSE: {rmse:.4f}")
+print(f" R² Score: {r2:.4f}")
 
 # ----- 6. Engagement Rate Distribution -----
 plt.hist(y, bins=50)

@@ -50,10 +50,10 @@ kf = KFold(n_splits=5, shuffle=True, random_state=42)
 rmse_scores = cross_val_score(stacked_model, X, y, scoring=rmse_scorer, cv=kf)
 r2_scores = cross_val_score(stacked_model, X, y, scoring=r2_scorer, cv=kf)
 
-print("📊 Stacked Model Cross-Validated RMSE:")
-print(f"  Mean: {-rmse_scores.mean():.4f}, Std: {rmse_scores.std():.4f}")
-print("📊 Stacked Model Cross-Validated R²:")
-print(f"  Mean: {r2_scores.mean():.4f}, Std: {r2_scores.std():.4f}")
+print(" Stacked Model Cross-Validated RMSE:")
+print(f" Mean: {-rmse_scores.mean():.4f}, Std: {rmse_scores.std():.4f}")
+print(" Stacked Model Cross-Validated R²:")
+print(f" Mean: {r2_scores.mean():.4f}, Std: {r2_scores.std():.4f}")
 
 # ----- Train/test evaluation -----
 X_train, X_test, y_train, y_test = train_test_split(
@@ -66,17 +66,17 @@ y_pred = stacked_model.predict(X_test)
 rmse = rmse_func(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 
-print("\n📈 Train/Test Evaluation for Stacked Model:")
-print(f"  RMSE: {rmse:.4f}")
-print(f"  R² Score: {r2:.4f}")
+print("\n Train/Test Evaluation for Stacked Model:")
+print(f"RMSE: {rmse:.4f}")
+print(f"R² Score: {r2:.4f}")
 
 # ----- Save model -----
 joblib.dump(stacked_model, "short_video_stacked_model.pkl")
-print("\n✅ Stacked model saved as 'short_video_stacked_model.pkl'")
+print("\nStacked model saved as 'short_video_stacked_model.pkl'")
 
 # ----- Optional: Feature correlation check -----
 corr = df[features + [target]].corr()[target].sort_values(ascending=False)
-print("\n🔗 Feature Correlation with Target:")
+print("\nFeature Correlation with Target:")
 print(corr)
 
 # ----- Optional: Plot Target Distribution -----

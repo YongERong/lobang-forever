@@ -83,7 +83,7 @@ for start in range(0, len(df), chunk_size):
     data = chunk.to_dict(orient="records")
     response = supabase.table(table_name).insert(data).execute()
     if response.data:
-        print(f"✅ Inserted rows {start} to {start+len(data)}")
+        print(f"Inserted rows {start} to {start+len(data)}")
     else:
-        print(f"❌ Failed to insert rows {start} to {start+len(data)} → Error: {response.error}")
+        print(f"Failed to insert rows {start} to {start+len(data)} → Error: {response.error}")
 

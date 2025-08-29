@@ -114,11 +114,11 @@ quality_map = {
 df_eng["quality_label"] = df_eng["cluster_eng"].map(quality_map)
 
 # Preview samples from each cluster
-print("\n📉 Low Quality Samples:")
+print("\nLow Quality Samples:")
 print(df_eng[df_eng["quality_label"] == "Low Quality"][features_engineered + ["quality_label"]].head(5))
 
-print("\n📊 Medium Quality Samples:")
+print("\nMedium Quality Samples:")
 print(df_eng[df_eng["quality_label"] == "Medium Quality"][features_engineered + ["quality_label"]].head(5))
 
-print("\n📈 High Quality Samples:")
+print("\nHigh Quality Samples:")
 print(df_eng[df_eng["quality_label"] == "High Quality"][features_engineered + ["quality_label"]].head(5))
