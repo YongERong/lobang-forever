@@ -38,5 +38,5 @@ quality_map = {
 df["quality_label"] = df["cluster"].map(quality_map)
 
 # === Save to CSV ===
-df.to_csv("tiktok_quality_classification.csv", index=False)
-print("✅ Classification results saved to 'tiktok_quality_classification.csv'.")
+# df.to_csv("tiktok_quality_classification.csv", index=False)
+# print("✅ Classification results saved to 'tiktok_quality_classification.csv'.")
