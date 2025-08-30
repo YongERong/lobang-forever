@@ -19,6 +19,7 @@ const Home = ({ user, setUser }: HomeProps) => {
     }, []);
 
   const navigate = useNavigate();
+  const [submitResult, setSubmitResult] = useState<string>('');
   useEffect(() => {
     if (!user) {
       navigate("/");
@@ -41,7 +42,7 @@ const Home = ({ user, setUser }: HomeProps) => {
       <Stack direction={{xs: "column", md: "row"}} spacing={2}>
         {metricData.map((data) => <MetricCard data={data}/>)}
       </Stack>
-      <ModelInput />
+      <ModelInput submitResult={submitResult} setSubmitResult={setSubmitResult}/>
       <SHAPDashboard data={SHAPData} dataKey={"feature"} />
       <LogoutButton setUser={setUser}/>
     </Stack >
