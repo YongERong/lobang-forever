@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from 'react';
 import {
   Box,
@@ -25,7 +26,7 @@ import { modelInputs } from '../data/mockdata';
 const inputs = modelInputs;
 
 const ModelInput: React.FC = ({ submitResult, setSubmitResult }) => {
-  const [mode, setMode] = useState<1 | 2>(1);sam
+  const [mode, setMode] = useState<1 | 2>(1);
   const [linkValue, setLinkValue] = useState<string>('');
   const [formValues, setFormValues] = useState<FormValues>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -96,12 +97,13 @@ const ModelInput: React.FC = ({ submitResult, setSubmitResult }) => {
     }
   };
 
-  const simulateAPICall = async (data: any): Promise<string> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(`API call successful! Received data: ${JSON.stringify(data, null, 2)}`);
-      }, 2000);
-    });
+  const simulateAPICall = async (data: any) => {
+    try {
+      const response = await axios.get("/api/score?video_duration_sec=30&verified_status=1&author_ban_status=0&like_ratio=0.1&share_ratio=0.05&comment_ratio=0.02");
+      return response.data;
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleSubmit = async () => {

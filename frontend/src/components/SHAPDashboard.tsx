@@ -6,7 +6,7 @@ import type { SHAPDashboardProps } from '../types';
 
 const SHAPDashboard = ({ data, dataKey } : SHAPDashboardProps) => {
   return (
-    <Paper elevation={2} sx={{ width: "80%", p: 3, borderRadius: "1.5rem" }}>
+    <Paper elevation={2} sx={{ width: "100%", p: 3, borderRadius: "1.5rem", maxWidth: "900px", mx: "auto"}}>
       <Stack width="100%">
         <Typography variant="h6" component="span" textAlign="center">
           SHAP Dashboard

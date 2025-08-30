@@ -8,6 +8,7 @@ import LogoutButton from "../components/LogoutButton";
 import { metrics, SHAPData } from "../data/mockdata";
 import MetricCard from "../components/MetricCard";
 import ModelInput from "../components/ModelInput";
+import ModelOutput from "../components/ModelOutput";
 
 const Home = ({ user, setUser }: HomeProps) => {
   const [message, setMessage] = useState<string>("");
@@ -24,7 +25,8 @@ const Home = ({ user, setUser }: HomeProps) => {
     if (!user) {
       navigate("/");
     }
-  }, [user, navigate]);
+    console.log(submitResult);
+  }, [user, navigate, submitResult]);
 
   const metricData = metrics;
 
@@ -43,7 +45,7 @@ const Home = ({ user, setUser }: HomeProps) => {
         {metricData.map((data) => <MetricCard data={data}/>)}
       </Stack>
       <ModelInput submitResult={submitResult} setSubmitResult={setSubmitResult}/>
-      <SHAPDashboard data={SHAPData} dataKey={"feature"} />
+      <ModelOutput submitResult={submitResult} />
       <LogoutButton setUser={setUser}/>
     </Stack >
   );
