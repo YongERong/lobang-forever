@@ -28,6 +28,7 @@ jobs:
           name: Models
           pattern: '*.pkl'
           path: backend/models/
+          merge-multiple: true
 
       - name: Ensure models directory exists
         run: |
