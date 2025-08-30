@@ -1,5 +1,9 @@
 
 import pandas as pd
+from supabase import create_client, Client
+from dotenv import load_dotenv
+import os
+import numpy as np
 
 # Load CSV
 df = pd.read_csv("tiktok_dataset.csv")  
@@ -47,3 +51,39 @@ df["comment_ratio"] = df["video_comment_count"] / df["video_view_count"]
 # ]].head())
 
 df.to_csv('tiktok_dataset_cleaned.csv', index=False)
+
+# Credentials
+load_dotenv()
+url = os.getenv("SUPABASE_URL")
+key = os.getenv("SUPABASE_KEY")
+# print("URL:", os.getenv("SUPABASE_URL"))
+# print("KEY:", os.getenv("SUPABASE_KEY"))
+
+supabase: Client = create_client(url, key)
+
+# Convert count columns to integers to match Supabase schema
+count_cols = [
+    "video_view_count", "video_like_count", "video_share_count",
+    "video_download_count", "video_comment_count"
+]
+
+for col in count_cols:
+    df[col] = df[col].astype(int)
+
+# Clean bad float values
+df.replace([np.inf, -np.inf], np.nan, inplace=True)
+df.dropna(inplace=True)
+
+# Upload rows in chunks
+chunk_size = 500
+table_name = "tiktok_dataset_cleaned"
+
+for start in range(0, len(df), chunk_size):
+    chunk = df.iloc[start:start+chunk_size]
+    data = chunk.to_dict(orient="records")
+    response = supabase.table(table_name).insert(data).execute()
+    if response.data:
+        print(f"Inserted rows {start} to {start+len(data)}")
+    else:
+        print(f"Failed to insert rows {start} to {start+len(data)} → Error: {response.error}")
+
