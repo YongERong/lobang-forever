@@ -14,8 +14,6 @@ def health():
     return {"message": "health ok"}
 
 
-@app.post("/score")
-def score(metrics: VideoMetrics):
-    logging.info(VideoMetrics)
+    logging.info(metrics)
     prediction = scoring_manager.score(metrics)
     return {"score": prediction}
