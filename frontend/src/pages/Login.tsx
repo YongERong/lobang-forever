@@ -18,6 +18,42 @@ import SingpassLogin from "../components/SingpassLogin";
 import TextSpinner from "../components/TextSpinner";
 import { credentials } from "../data/mockdata";
 
+// Read Vite env for TikTok client key and redirect URI
+const TIKTOK_CLIENT_KEY = import.meta.env.VITE_TIKTOK_CLIENT_KEY as string | undefined;
+const TIKTOK_REDIRECT_URI = import.meta.env.VITE_TIKTOK_REDIRECT_URI as string | undefined;
+
+// PKCE helpers
+const base64UrlEncode = (buffer: ArrayBuffer) => {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  const b64 = btoa(binary);
+  return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+};
+
+const sha256 = async (plain: string) => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(plain);
+  return await crypto.subtle.digest('SHA-256', data);
+};
+
+const generateCodeVerifier = (length = 128) => {
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  // convert to base64url
+  let binary = '';
+  for (let i = 0; i < array.length; i++) binary += String.fromCharCode(array[i]);
+  const b64 = btoa(binary);
+  return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '').slice(0, length);
+};
+
+const generateCodeChallenge = async (verifier: string) => {
+  const hashed = await sha256(verifier);
+  return base64UrlEncode(hashed);
+};
+
 const Login = ({ user, setUser }: LoginProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,6 +68,67 @@ const Login = ({ user, setUser }: LoginProps) => {
       navigate("/home");
     }
   }, [user, navigate]);
+
+  // Handle TikTok OAuth callback: if URL contains code and state, verify and exchange
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
+
+    if (code) {
+      // Only proceed if state matches the one we stored before redirect
+      const savedState = sessionStorage.getItem('tiktok_oauth_state');
+      if (!state || !savedState || state !== savedState) {
+        setError('TikTok login failed: invalid state.');
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+        return;
+      }
+
+      // Clear stored state
+      sessionStorage.removeItem('tiktok_oauth_state');
+
+      // Exchange the authorization code with the backend.
+      // The backend must implement the server-side call to TikTok's /oauth/access_token
+      // because it requires the client_secret. POST to a backend endpoint you provide.
+      (async () => {
+        setLoading(true);
+        setError('');
+        try {
+          const codeVerifier = sessionStorage.getItem('tiktok_code_verifier');
+          const resp = await fetch('/auth/tiktok/exchange', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code, redirect_uri: TIKTOK_REDIRECT_URI, code_verifier: codeVerifier })
+          });
+
+          if (!resp.ok) {
+            const body = await resp.text();
+            throw new Error(`Exchange failed: ${body}`);
+          }
+
+          const data = await resp.json();
+          // Expect the backend to return a user object or token. Adjust according to your API.
+          if (data && data.user) {
+            setUser(data.user);
+            navigate('/home');
+          } else if (data && data.access_token) {
+            // Optionally fetch user profile from backend or store token and fetch profile
+            // For demo, we'll navigate to home and leave auth handling to your app.
+            navigate('/home');
+          } else {
+            setError('TikTok login succeeded but unexpected response from server.');
+          }
+        } catch (err: any) {
+          setError(err?.message || 'TikTok login failed.');
+        } finally {
+          setLoading(false);
+          // Clean URL to remove code/state
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      })();
+    }
+  }, [setUser, navigate]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -266,6 +363,49 @@ const Login = ({ user, setUser }: LoginProps) => {
             </Box>
 
             <SingpassLogin setUser={setUser}/>
+            
+            {/* TikTok Login Button */}
+            <Box sx={{ mt: 2 }}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => {
+                  // Build TikTok authorize URL and redirect
+                  // Save a random state to sessionStorage to verify on callback
+                  const clientKey = TIKTOK_CLIENT_KEY;
+                  const redirectUri = TIKTOK_REDIRECT_URI;
+                  if (!clientKey || !redirectUri) {
+                    // If env vars are not set, show a small error via alert (dev only)
+                    alert('TikTok login is not configured. Set VITE_TIKTOK_CLIENT_KEY and VITE_TIKTOK_REDIRECT_URI in your environment.');
+                    return;
+                  }
+
+                  (async () => {
+                    const state = Math.random().toString(36).slice(2);
+                    sessionStorage.setItem('tiktok_oauth_state', state);
+
+                    // PKCE: generate code_verifier and code_challenge
+                    const codeVerifier = generateCodeVerifier();
+                    const codeChallenge = await generateCodeChallenge(codeVerifier);
+                    sessionStorage.setItem('tiktok_code_verifier', codeVerifier);
+
+                    const scope = encodeURIComponent('user.info.basic');
+                    const url = `https://www.tiktok.com/v2/auth/authorize/?client_key=${encodeURIComponent(clientKey)}&response_type=code&scope=${scope}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(state)}&code_challenge=${encodeURIComponent(codeChallenge)}&code_challenge_method=S256`;
+
+                    // Redirect to TikTok for authorization
+                    window.location.href = url;
+                  })();
+                }}
+                sx={{
+                  mt: 1,
+                  borderRadius: '8px',
+                  textTransform: 'none',
+                  color: '#111827'
+                }}
+              >
+                Continue with TikTok
+              </Button>
+            </Box>
           </form>
         </Box>
       </Box>
