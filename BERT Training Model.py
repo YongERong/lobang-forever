@@ -1,6 +1,4 @@
-from datasets import load_dataset
-from huggingface_hub import HfApi
-import os
+from datasets import load_dataset    
 dataset = load_dataset('imdb')
 small_train_dataset = dataset["train"].shuffle(seed=42).select([i for i in list(range(5000))])
 small_test_dataset = dataset["test"].shuffle(seed=42).select([i for i in list(range(500))])
@@ -64,7 +62,8 @@ trainer = Trainer(
 
 trainer.train()
 trainer.evaluate()
-trainer.push_to_hub(commit_message="Training complete
+trainer.push_to_hub(commit_message="Training complete")
 from transformers import pipeline
 sentiment_model = pipeline("text-classification", model="shauntjw18/lobang-bert")
-sentiment_model(["I love this move", "This movie sucks!"])
+sentiment_model(["I love this movie", "This movie sucks!"])
+
