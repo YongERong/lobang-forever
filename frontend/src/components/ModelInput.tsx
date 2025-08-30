@@ -187,7 +187,7 @@ const ModelInput: React.FC = () => {
 
   return (
     <Box sx={{ maxWidth: 1000, margin: '0 auto', padding: 3 }}>
-      <Paper elevation={3} sx={{ padding: 3 }}>
+      <Paper elevation={3} sx={{ padding: 3, borderRadius: "1.5rem" }}>
         <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
           <FormControlLabel
             control={

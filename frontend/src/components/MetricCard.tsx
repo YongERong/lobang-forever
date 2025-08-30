@@ -30,7 +30,7 @@ const MetricCard = ({ data } : MetricCardProps) => {
         minWidth: 275,
         height: '100%',
         color: 'white',
-        borderRadius: 2,
+        borderRadius: "1.5rem",
         transition: 'all 0.2s ease-in-out',
         '&:hover': {
           transform: 'translateY(-2px)',
