@@ -6,7 +6,7 @@ import SHAPDashboard from "../components/SHAPDashboard";
 import LogoutButton from "../components/LogoutButton";
 import { metrics, SHAPData } from "../data/mockdata";
 import MetricCard from "../components/MetricCard";
-import VariableInputForm from "../components/ModelInput";
+import ModelInput from "../components/ModelInput";
 
 const Home = ({ user, setUser }: HomeProps) => {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const Home = ({ user, setUser }: HomeProps) => {
       <Stack direction={{xs: "column", md: "row"}} spacing={2}>
         {metricData.map((data) => <MetricCard data={data}/>)}
       </Stack>
-      <VariableInputForm />
+      <ModelInput />
       <SHAPDashboard data={SHAPData} dataKey={"feature"} />
       <LogoutButton setUser={setUser}/>
     </Stack >
