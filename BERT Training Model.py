@@ -34,14 +34,12 @@ def compute_metrics(eval_pred):
    f1 = load_f1.compute(predictions=predictions, references=labels)["f1"]
    return {"accuracy": accuracy, "f1": f1}
 
-from huggingface_hub import HfApi
-
-api = HfApi(token=os.getenv("HF_TOKEN"))
-
+from huggingface_hub import notebook_login
+notebook_login()
 
 
 from transformers import TrainingArguments, Trainer
-repo_name = "bert"
+repo_name = "lobang-bert"
 
 training_args = TrainingArguments(
    output_dir=repo_name,
@@ -65,10 +63,8 @@ trainer = Trainer(
 )
 
 trainer.train()
-model.save_pretrained("./lobang-bert")
-tokenizer.save_pretrained("./lobang-bert")
 trainer.evaluate()
-trainer.push_to_hub(commit_message="Training complete")
-
-
-
+trainer.push_to_hub(commit_message="Training complete
+from transformers import pipeline
+sentiment_model = pipeline("text-classification", model="shauntjw18/lobang-bert")
+sentiment_model(["I love this move", "This movie sucks!"])
