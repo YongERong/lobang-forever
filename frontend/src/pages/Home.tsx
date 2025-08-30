@@ -39,8 +39,6 @@ const Home = ({ user, setUser }: HomeProps) => {
       spacing={2}
       divider={<Divider flexItem />}
     >
-      // TODO: Temp test to see if it is calling API
-      <h1>{message}</h1>
       <Stack direction={{xs: "column", md: "row"}} spacing={2}>
         {metricData.map((data) => <MetricCard data={data}/>)}
       </Stack>
