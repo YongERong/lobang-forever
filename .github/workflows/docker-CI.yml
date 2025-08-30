@@ -55,4 +55,4 @@ jobs:
 
       - name: Output image tags
         run: |
-          echo "Image pushed: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}-backend:${{ github.sha }}"
+          echo "Image pushed: ghcr.io/${{ github.repository }}-backend:${{ github.sha }}"
