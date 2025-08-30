@@ -22,7 +22,7 @@ features = [
     "video_duration_sec",
     "verified_status",
     "author_ban_status",
-    "like_ratio",
+    #"like_ratio",
     "share_ratio",
     "comment_ratio"
  
@@ -31,6 +31,9 @@ features = [
 
 X = df[features]
 y = df["engagement_rate"]
+
+print(X.shape)
+print(y.shape)
 
 # -------------------------
 # Compute permutation importance

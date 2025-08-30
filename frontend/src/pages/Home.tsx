@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import type { HomeProps } from "../types";
@@ -10,6 +11,21 @@ import ModelInput from "../components/ModelInput";
 import ModelOutput from "../components/ModelOutput";
 
 const Home = ({ user, setUser }: HomeProps) => {
+  const [message, setMessage] = useState<string>("");
+
+  useEffect(() => {
+        axios.post("/api/score", {
+            video_duration_sec: 30,
+            verified_status: 1,
+            author_ban_status: 0,
+            like_ratio: 0.1,
+            share_ratio: 0.05,
+            comment_ratio: 0.02
+        })
+            .then(response => setMessage(response.data.score))
+            .catch(error => console.error("Error fetching data", error));
+    }, []);
+
   const navigate = useNavigate();
   const [submitResult, setSubmitResult] = useState<string>('');
   useEffect(() => {
