@@ -65,7 +65,10 @@ trainer = Trainer(
 )
 
 trainer.train()
+model.save_pretrained("./lobang-bert")
+tokenizer.save_pretrained("./lobang-bert")
 trainer.evaluate()
 trainer.push_to_hub(commit_message="Training complete")
+
 
 
