@@ -40,7 +40,7 @@ const inputs: InputField[] = [
   { feature: "video_comment_count", dtype: "float" },
 ];
 
-const VariableInputForm: React.FC = () => {
+const ModelInput: React.FC = () => {
   const [mode, setMode] = useState<1 | 2>(1);
   const [linkValue, setLinkValue] = useState<string>('');
   const [formValues, setFormValues] = useState<FormValues>({});
@@ -282,4 +282,4 @@ const VariableInputForm: React.FC = () => {
   );
 };
 
-export default VariableInputForm;
+export default ModelInput;
