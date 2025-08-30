@@ -24,12 +24,12 @@ import { modelInputs } from '../data/mockdata';
 
 const inputs = modelInputs;
 
-const ModelInput: React.FC = () => {
-  const [mode, setMode] = useState<1 | 2>(1);
+const ModelInput: React.FC = ({ submitResult, setSubmitResult }) => {
+  const [mode, setMode] = useState<1 | 2>(1);sam
   const [linkValue, setLinkValue] = useState<string>('');
   const [formValues, setFormValues] = useState<FormValues>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [submitResult, setSubmitResult] = useState<string>('');
+
 
   const handleModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMode(event.target.checked ? 2 : 1);
@@ -140,7 +140,7 @@ const ModelInput: React.FC = () => {
     const selectOptions = getSelectOptions(feature);
     if (dtype === 'string' && selectOptions.length > 0) {
       return (
-        <Grid sx={{xs:12, sm:6}} key={feature}>
+        <Grid sx={{ xs: 12, sm: 6 }} key={feature}>
           <FormControl fullWidth variant="outlined" sx={{ width: 250 }} required>
             <InputLabel>{feature.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</InputLabel>
             <Select
@@ -161,7 +161,7 @@ const ModelInput: React.FC = () => {
 
     // For other field types, use TextField
     return (
-      <Grid sx={{xs:12, sm:6}} key={feature}>
+      <Grid sx={{ xs: 12, sm: 6 }} key={feature}>
         <TextField
           fullWidth
           label={feature.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}

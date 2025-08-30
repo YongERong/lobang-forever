@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import type { HomeProps } from "../types";
 import { Divider, Stack } from "@mui/material";
@@ -10,6 +10,7 @@ import ModelInput from "../components/ModelInput";
 
 const Home = ({ user, setUser }: HomeProps) => {
   const navigate = useNavigate();
+  const [submitResult, setSubmitResult] = useState<string>('');
   useEffect(() => {
     if (!user) {
       navigate("/");
@@ -30,7 +31,7 @@ const Home = ({ user, setUser }: HomeProps) => {
       <Stack direction={{xs: "column", md: "row"}} spacing={2}>
         {metricData.map((data) => <MetricCard data={data}/>)}
       </Stack>
-      <ModelInput />
+      <ModelInput submitResult={submitResult} setSubmitResult={setSubmitResult}/>
       <SHAPDashboard data={SHAPData} dataKey={"feature"} />
       <LogoutButton setUser={setUser}/>
     </Stack >
