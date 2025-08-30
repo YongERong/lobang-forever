@@ -1,0 +1,58 @@
+name: Build and publish backend image (on model-CI)
+
+on:
+  workflow_run:
+    workflows: ["model-CI"]
+    types:
+      - completed
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: backend-docker-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-backend:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Download model artifacts from model-CI run
+        uses: actions/download-artifact@v4
+        with:
+          name: Models
+          pattern: '*.pkl'
+          path: backend/models/
+          merge-multiple: true
+
+      - name: Ensure models directory exists
+        run: |
+          ls -la backend || true
+          mkdir -p backend/models
+          ls -la backend/models || true
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}-backend:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/${{ github.repository }}-backend:latest
+
+      - name: Output image tags
+        run: |
+          echo "Image pushed: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}-backend:${{ github.sha }}"

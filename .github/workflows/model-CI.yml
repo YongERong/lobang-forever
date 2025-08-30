@@ -1,0 +1,56 @@
+name: Retrain models
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  retrain-models:
+    name: Retrain ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: engagement_ensemble
+            script: tiktok_dataset/Engagement_model.py
+            output: tiktok_engagement_stacked_model.pkl
+          - name: quality_classification
+            script: tiktok_dataset/Classification_model.py
+            output: tiktok_classification_pipeline.pkl
+          - name: watch_duration_ensemble
+            script: short_video_dataset/Watch_duration_model.py
+            output: short_video_stacked_model.pkl
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run training for ${{ matrix.name }}
+        run: |
+          python ${{ matrix.script }}
+        env:
+          PYTHONUNBUFFERED: 1
+
+      - name: Upload trained artifact for ${{ matrix.name }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.output }}
+          path: ${{ matrix.output }}
