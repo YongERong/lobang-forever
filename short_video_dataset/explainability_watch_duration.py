@@ -22,7 +22,7 @@ df = pd.read_csv(data_path)
 # Define Features
 # -----------------------------
 features = [
-    "like_ratio", "comment_ratio", "share_ratio", "watch_ratio",
+    "like_ratio", "comment_ratio", "share_ratio", #"watch_ratio",
     "title_length", "description_length",
     "edge_intensity", "color_histogram",
     "spectral_entropy", "audio_intensity"
