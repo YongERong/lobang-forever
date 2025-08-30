@@ -48,3 +48,12 @@ export interface MetricProps {
 export interface MetricCardProps {
   data: MetricProps;
 }
+
+export interface InputField {
+  feature: string;
+  dtype: string;
+}
+
+export interface FormValues {
+  [key: string]: string | number;
+}

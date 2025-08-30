@@ -1,4 +1,5 @@
 import { Comment, Favorite, MissedVideoCall, Share, TrendingUp } from "@mui/icons-material";
+import type { InputField } from "../types";
 
 export const credentials = [
   { NRIC: "lebron", password: "james" },
@@ -51,4 +52,15 @@ export const metrics = [
     icon: Share,
     description: "change this month"
   }
+];
+
+export const modelInputs: InputField[] = [
+  { feature: "video_duration_sec", dtype: "int" },
+  { feature: "verified_status", dtype: "string" },
+  { feature: "author_ban_status", dtype: "string" },
+  { feature: "video_view_count", dtype: "float" },
+  { feature: "video_like_count", dtype: "float" },
+  { feature: "video_share_count", dtype: "float" },
+  { feature: "video_download_count", dtype: "float" },
+  { feature: "video_comment_count", dtype: "float" },
 ];

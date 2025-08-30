@@ -19,26 +19,10 @@ import {
   CardContent,
 } from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
+import type { FormValues, InputField } from '../types';
+import { modelInputs } from '../data/mockdata';
 
-interface InputField {
-  feature: string;
-  dtype: string;
-}
-
-interface FormValues {
-  [key: string]: string | number;
-}
-
-const inputs: InputField[] = [
-  { feature: "video_duration_sec", dtype: "int" },
-  { feature: "verified_status", dtype: "string" },
-  { feature: "author_ban_status", dtype: "string" },
-  { feature: "video_view_count", dtype: "float" },
-  { feature: "video_like_count", dtype: "float" },
-  { feature: "video_share_count", dtype: "float" },
-  { feature: "video_download_count", dtype: "float" },
-  { feature: "video_comment_count", dtype: "float" },
-];
+const inputs = modelInputs;
 
 const ModelInput: React.FC = () => {
   const [mode, setMode] = useState<1 | 2>(1);
