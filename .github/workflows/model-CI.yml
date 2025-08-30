@@ -45,6 +45,8 @@ jobs:
 
       - name: Run training for ${{ matrix.name }}
         run: |
+          export SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          export SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}
           python ${{ matrix.script }}
         env:
           PYTHONUNBUFFERED: 1
