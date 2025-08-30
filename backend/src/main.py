@@ -1,9 +1,12 @@
 from fastapi import FastAPI
 from scoring_manager import ScoringManager
+from schemas import VideoMetrics
+import logging
 
 app = FastAPI()
 
 scoring_manager = ScoringManager()
+logging.basicConfig(level=logging.DEBUG)
 
 
 @app.get("/health")
@@ -11,21 +14,8 @@ def health():
     return {"message": "health ok"}
 
 
-@app.get("/score")
-def score(
-    video_duration_sec,
-    verified_status,
-    author_ban_status,
-    like_ratio,
-    share_ratio,
-    comment_ratio,
-):
-    prediction = scoring_manager.predict(
-        video_duration_sec,
-        verified_status,
-        author_ban_status,
-        like_ratio,
-        share_ratio,
-        comment_ratio,
-    )
+@app.post("/score")
+def score(metrics: VideoMetrics):
+    logging.info(VideoMetrics)
+    prediction = scoring_manager.score(metrics)
     return {"score": prediction}
