@@ -57,3 +57,9 @@ export interface InputField {
 export interface FormValues {
   [key: string]: string | number;
 }
+
+export interface ScoreResult {
+  quality_score?: number;
+  quality_class?: string;
+  watch_duration?: number;
+}

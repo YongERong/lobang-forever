@@ -5,6 +5,24 @@ import { useState, useEffect } from 'react';
 import type { User } from './types/index.ts';
 import TextSpinner from './components/TextSpinner.tsx';
 
+// async font loader to avoid blocking initial render
+const loadFonts = () => {
+  if ('requestIdleCallback' in window) {
+    // @ts-ignore
+    requestIdleCallback(() => {
+      import('@fontsource/roboto/400.css');
+      import('@fontsource/poppins/400.css');
+    });
+  } else {
+    setTimeout(() => {
+      import('@fontsource/roboto/400.css');
+      import('@fontsource/poppins/400.css');
+    }, 2000);
+  }
+};
+
+loadFonts();
+
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);

@@ -27,7 +27,7 @@ const MetricCard = ({ data } : MetricCardProps) => {
   return (
     <Card 
       sx={{ 
-        minWidth: 275,
+        width: '100%',
         height: '100%',
         color: 'white',
         borderRadius: "1.5rem",

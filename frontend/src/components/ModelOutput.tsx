@@ -2,15 +2,25 @@ import { Box, Paper, Stack, Typography, Chip, Container } from "@mui/material";
 import { Gauge } from "@mui/x-charts";
 import SHAPDashboard from "./SHAPDashboard";
 import { SHAPData } from "../data/mockdata";
+import type { ScoreResult } from "../types";
 
-const ModelOutput = ({ submitResult }) => {
-  const data = {
-    videoQuality: "Low Quality",
-    counterfactuals: [
-      "If your video was longer, it would have 20% more views",
-      "If your video had more comments, it would have 39% more likes"
-    ],
-  };
+const ModelOutput = ({ submitResult }: { submitResult: string | ScoreResult | null }) => {
+  // If submitResult is the structured score object, extract values; otherwise fallback to mock
+  const isStructured = typeof submitResult === 'object' && submitResult !== null;
+  const data = isStructured
+    ? {
+        videoQuality: (submitResult as ScoreResult).quality_class || 'Unknown',
+        counterfactuals: [],
+        quality_score: (submitResult as ScoreResult).quality_score,
+        watch_duration: (submitResult as ScoreResult).watch_duration,
+      }
+    : {
+        videoQuality: "Low Quality",
+        counterfactuals: [
+          "If your video was longer, it would have 20% more views",
+          "If your video had more comments, it would have 39% more likes"
+        ],
+      };
 
   const getQualityConfig = (type) => {
     switch (type) {
@@ -143,6 +153,20 @@ const ModelOutput = ({ submitResult }) => {
                 >
                   {qualityConfig.message}
                 </Typography>
+
+                {/* Numeric metrics when available */}
+                {isStructured && (
+                  <Stack direction="row" spacing={3} sx={{ mt: 2 }}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="caption">Quality Score</Typography>
+                      <Typography variant="h5">{(data as any).quality_score ?? '—'}</Typography>
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Typography variant="caption">Watch Duration</Typography>
+                      <Typography variant="h5">{(data as any).watch_duration ?? '—'}</Typography>
+                    </Box>
+                  </Stack>
+                )}
               </Stack>
             </Paper>
 
