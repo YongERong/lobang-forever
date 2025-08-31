@@ -3,6 +3,32 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.pipeline import Pipeline
 import joblib
+from supabase import create_client
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+# === Download Data from Supabase ===
+url = os.getenv("SUPABASE_URL")
+key = os.getenv("SUPABASE_KEY")
+
+supabase = create_client(url, key)
+response = (
+    supabase.table("tiktok_dataset_cleaned")
+    .select("*")
+    .csv()
+    .execute()
+)
+
+if response.data:
+    csv_data = response.data
+    with open("tiktok_dataset_cleaned.csv", "w+", encoding="utf-8") as f:
+        f.write(csv_data)
+    print("Data successfully downloaded as output.csv")
+else:
+    print("Error or no data returned:", response.error)
+
 
 # === Load Data ===
 df = pd.read_csv("tiktok_dataset_cleaned.csv")

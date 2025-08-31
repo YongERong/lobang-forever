@@ -5,7 +5,34 @@ from sklearn.metrics import make_scorer, mean_squared_error, r2_score
 import pandas as pd
 import numpy as np
 import joblib
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
+
+from supabase import create_client
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+# === Download Data from Supabase ===
+url = os.getenv("SUPABASE_URL")
+key = os.getenv("SUPABASE_KEY")
+
+supabase = create_client(url, key)
+response = (
+    supabase.table("short_video_engagement")
+    .select("*")
+    .csv()
+    .execute()
+)
+
+if response.data:
+    csv_data = response.data
+    with open("short_video_engagement.csv", "w+", encoding="utf-8") as f:
+        f.write(csv_data)
+    print("Data successfully downloaded as output.csv")
+else:
+    print("Error or no data returned:", response.error)
+
 
 # Load your dataset
 df = pd.read_csv("short_video_engagement.csv")
@@ -79,9 +106,9 @@ corr = df[features + [target]].corr()[target].sort_values(ascending=False)
 print("\nFeature Correlation with Target:")
 print(corr)
 
-# ----- Optional: Plot Target Distribution -----
-plt.hist(y, bins=50)
-plt.title("Distribution of Target: Watch Duration")
-plt.xlabel("Watch Duration")
-plt.ylabel("Frequency")
-plt.show()
+# # ----- Optional: Plot Target Distribution -----
+# plt.hist(y, bins=50)
+# plt.title("Distribution of Target: Watch Duration")
+# plt.xlabel("Watch Duration")
+# plt.ylabel("Frequency")
+# plt.show()

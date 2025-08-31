@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import joblib
 
 from sklearn.model_selection import train_test_split, KFold, cross_val_score
@@ -12,6 +12,33 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score, make_scorer
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import make_pipeline
+
+from supabase import create_client
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+# === Download Data from Supabase ===
+url = os.getenv("SUPABASE_URL")
+key = os.getenv("SUPABASE_KEY")
+
+supabase = create_client(url, key)
+response = (
+    supabase.table("tiktok_dataset_cleaned")
+    .select("*")
+    .csv()
+    .execute()
+)
+
+if response.data:
+    csv_data = response.data
+    with open("tiktok_dataset_cleaned.csv", "w+", encoding="utf-8") as f:
+        f.write(csv_data)
+    print("Data successfully downloaded as output.csv")
+else:
+    print("Error or no data returned:", response.error)
+
 
 # ----- 1. Load Dataset -----
 df = pd.read_csv("tiktok_dataset_cleaned.csv")
@@ -75,22 +102,22 @@ print("\n Train/Test Evaluation:")
 print(f" RMSE: {rmse:.4f}")
 print(f" R² Score: {r2:.4f}")
 
-# ----- 6. Engagement Rate Distribution -----
-plt.hist(y, bins=50)
-plt.title("Engagement Rate Distribution")
-plt.xlabel("Engagement Rate")
-plt.ylabel("Frequency")
-plt.tight_layout()
-plt.show()
+# # ----- 6. Engagement Rate Distribution -----
+# plt.hist(y, bins=50)
+# plt.title("Engagement Rate Distribution")
+# plt.xlabel("Engagement Rate")
+# plt.ylabel("Frequency")
+# plt.tight_layout()
+# plt.show()
 
-# ----- 7. Residuals Distribution -----
-residuals = y_test - y_pred
-plt.hist(residuals, bins=50, color="orange")
-plt.title("Residuals Distribution")
-plt.xlabel("Residual")
-plt.ylabel("Frequency")
-plt.tight_layout()
-plt.show()
+# # ----- 7. Residuals Distribution -----
+# residuals = y_test - y_pred
+# plt.hist(residuals, bins=50, color="orange")
+# plt.title("Residuals Distribution")
+# plt.xlabel("Residual")
+# plt.ylabel("Frequency")
+# plt.tight_layout()
+# plt.show()
 
 # ----- 8. Correlation -----
 corr = df[features + [target]].corr()[target].sort_values(ascending=False)
